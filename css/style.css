@@ -1,0 +1,157 @@
+/* 
+main stylesheet
+*/
+
+.spacer{
+    clear: both;
+    height: 0;
+}
+
+body{
+    font-family: 'PT Sans', sans-serif;    
+    font-weight: bold;
+}
+
+body header{
+    margin-top: 30px;
+}
+
+body section{
+    margin-top: 75px;
+}
+
+body section div#containerPlayer{
+    position: relative;
+    overflow: hidden;
+}
+
+body section div#containerPlayer iframe{
+    position: relative;
+    z-index: 100;
+}
+body section div#containerPlayer div#iframePlayer{
+    position: relative;
+    z-index: 100;
+}
+
+body section div#titlePlayer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255,255,255,0.7);
+    z-index: 1000;
+    text-align: center;
+    font-size: 40px;
+    padding-top: 100px;
+}
+
+body header div#containerAnimals ul{
+    margin: 0;
+    padding: 0;
+}
+body header div#containerAnimals ul li{
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    position: relative;
+    z-index: 100;
+    margin-left: 13px;
+}
+
+body header div#containerAnimals ul li.rank0:after{
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 32px;
+    height: 59px;
+    background: url('../img/COCARDE1.png');
+    z-index: 200;
+    content: ""
+}
+body header div#containerAnimals ul li.rank1:after{
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 32px;
+    height: 59px;
+    background: url('../img/COCARDE2.png');
+    z-index: 200;
+    content: ""
+}
+body header div#containerAnimals ul li.rank2:after{
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 32px;
+    height: 59px;
+    background: url('../img/COCARDE3.png');
+    z-index: 200;
+    content: ""
+}
+
+body header div#containerAnimals ul li img{
+    width: 70px;
+    height: 70px;
+}
+
+body header div#showMore{
+    text-align: right;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+body header div#showMore span{
+    display: block;
+    float: left;
+}
+body header div#showMore a{
+    display: block;
+    float: right;
+    color: #000;
+    text-decoration: none;
+}
+
+body section ul#animalsPlayer{
+    list-style-type: none;
+}
+
+body section ul#animalsPlayer li{
+    margin-top: 20px;
+    position: relative;
+}
+
+/********/
+body section div.rateVideo{
+    margin-top: 20px;
+}
+
+body section div.shareVideo{
+    margin-top: 20px;
+}
+
+body section div.nextVideo{
+    margin-top: 50px;
+}
+
+body ul#animalsPlayer li.winner:after{
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 32px;
+    height: 59px;
+    background: url('../img/COCARDE3.png');
+    z-index: 200;
+    content: ""
+}
+body ul#animalsPlayer li.select:before{
+    position: absolute;
+    top: -10px;
+    left: 80px;
+    width: 32px;
+    height: 59px;
+    background: url('../img/COCARDE3.png');
+    z-index: 200;
+    content: ""
+}

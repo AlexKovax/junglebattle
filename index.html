@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Jungle Battle</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Who's the real king of the jungle" >
+
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+        <link href="css/style.css" rel="stylesheet" media="screen">
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/tipTip.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <header class="row">
+                <div class="span2 offset1">
+                    <a href="/"><img src="img/LOGOJUNGLEBATTLE.png" /></a>
+                </div>
+                <div class="span7 offset1">
+                    <div id="containerAnimals">
+                        <ul></ul>
+                    </div>
+                    <div id="showMore">
+                        <span>SELECT OPPONENTS</span>
+                        <a href="#">
+                            MORE
+                        </a>
+                        <div class="spacer"></div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="row">              
+                <div class="span2 offset1">
+                    <ul id="animalsPlayer"></ul>
+                </div>
+                <div id="containerPlayer" class="span6">
+                    <div id="iframePlayer">
+                        <div id="player"></div>
+                    </div>
+                    <div id="titlePlayer"></div>
+                </div>
+                <div class="span2">
+                    <div class="rateVideo">
+                        RATE:
+                        <br />
+                        <a class="tips" title="I loved it!" href="#"><img src="img/COEUR.png" /></a>
+                        <a class="tips" title="Shitty video!" href="#"><img src="img/CACA.png" /></a>
+                        <a class="tips" title="Flag: really gore!" href="#"><img src="img/HACHE.png" /></a>
+                    </div>
+                    <div class="shareVideo">
+                        SHARE:
+                        <br />                        
+                        <a class="tips" title="Share on Twitter" href="#"><img src="img/TWITTER.png" /></a>
+                        <a class="tips" title="Share on Facebook" href="#"><img src="img/FACEBOOK.png" /></a>
+                        <a class="tips" title="Share on Tumblr" href="#"><img src="img/TUMBLR.png" /></a>
+                    </div>
+                    <div class="nextVideo">
+                        <a href="javascript:loadNextVideo()">
+                            <img src="img/NEXT.png" />
+                        </a>
+                    </div>                    
+                </div>
+            </section>
+
+            <footer></footer>
+        </div>        
+
+
+        <!--scripts-->
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/jquery.tipTip.minified.js"></script>  
+        <script src="js/functions-youtube.js"></script>
+        <script src="js/init.js"></script>
+    </body>
+</html>

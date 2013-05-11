@@ -1,41 +1,60 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Content-type: application/json');
+
+set_include_path('.');
 require_once('config.php');
+require_once('google-api-php-client/src/Google_Client.php');
+require_once('google-api-php-client/src/contrib/Google_YouTubeService.php');
 
 // Connecting, selecting database
-//$dbconn = pg_connect("host=$DB_HOST dbname=$DB_NAME user=$DB_USER password=$DB_PASSWORD")
-//    or die('Could not connect: ' . pg_last_error());
+$dbconn = pg_connect("host=$DB_HOST dbname=$DB_NAME user=$DB_USER password=$DB_PASSWORD")
+    or die('Could not connect: ' . pg_last_error());
 
-
-$htmlBody = <<<END
-Hello ! <br>
-<form method="GET">
-  <div>
-    Search Term: <input type="search" id="q" name="q" placeholder="Enter Search Term">
-  </div>
-  <div>
-    Max Results: <input type="number" id="maxResults" name="maxResults" min="1" max="50" step="1" value="25">
-  </div>
-  <input type="submit" value="Search">
-</form>
-END;
-
-
-if ($_GET['q'] && $_GET['maxResults']) {
+if ($_GET['action']) {
+  if ($_GET['action'] == 'videos') {
     $animal1 = $_GET['animal1'];
     $animal2 = $_GET['animal2'];
-    $data = get_videos($animal1, $animal2);
-
-    echo json_encode(array('auth'=>'error','status'=>'error'));
+    $data = get_videos($animal1, $animal2, $_GET['maxResults']);
+    echo json_encode($data);
     exit(); 
+  } else if ($_GET['action'] == 'animal_list') {
+    $data = get_animal_list();
+    echo json_encode($data);
+  } else {
+    echo json_encode(array('status'=>'error', 'error_message'=>'Invalid parameters'));
+    exit();
+  }
+} else {
+  echo json_encode(array('status'=>'error', 'error_message'=>'Invalid parameters'));
+  exit();
 }
 
 
-function get_videos($animal1, $animal2) {
+
+
+function get_animal_list() {
+  global $dbconn;
+
+  $query = 'SELECT animal_id, name FROM animals';
+  $result = pg_query_params($dbconn, $query, array()) or die('Query failed: ' . pg_last_error());
+
+  $animals = array();
+  while ($data = pg_fetch_assoc($result))
+  {
+    $animals[] = array('animal_id' => $data['animal_id'],
+                       'name' => $data['name'],
+                       'rank' => 0);
+  }
+  return $animals;
+}
+
+
+function get_videos($animal1, $animal2, $max_results) {
+  global $DEVELOPER_KEY;
+
   //ini_set('memory_limit', '-1');
-  set_include_path('.');
-  require_once('google-api-php-client/src/Google_Client.php');
-  require_once('google-api-php-client/src/contrib/Google_YouTubeService.php');
 
   /* Set $DEVELOPER_KEY to the "API key" value from the "Access" tab of the
   Google APIs Console <http://code.google.com/apis/console#access>
@@ -47,16 +66,15 @@ function get_videos($animal1, $animal2) {
 
   $videos_out[] = array();
 
+  $videos = '';
+  $channels = '';
+  $playlists = '';
+
   try {
     $searchResponse = $youtube->search->listSearch('id,snippet', array(
-      //'q' => $_GET['q'],
       'q' => "$animal1 vs $animal2",
-      'maxResults' => $_GET['maxResults'],
+      'maxResults' => $max_results,
     ));
-
-    $videos = '';
-    $channels = '';
-    $playlists = '';
 
     foreach ($searchResponse['items'] as $searchResult) {
       switch ($searchResult['id']['kind']) {
@@ -69,7 +87,7 @@ function get_videos($animal1, $animal2) {
           $videos_out[] = array(
                                 'animal1' => $animal1,
                                 'animal2' => $animal2,
-                                'video_id' => $searchResult['snippet']['videoId'],
+                                'video_id' => $searchResult['id']['videoId'],
                                 'source' => 'youtube'
                                );
           break;
@@ -84,14 +102,7 @@ function get_videos($animal1, $animal2) {
       }
     }
 
-    $htmlBody .= <<<END
-    <h3>Videos</h3>
-    <ul>$videos</ul>
-    <h3>Channels</h3>
-    <ul>$channels</ul>
-    <h3>Playlists</h3>
-    <ul>$playlists</ul>
-END;
+    //echo $htmlBody;
   } catch (Google_ServiceException $e) {
     $htmlBody .= sprintf('<p>A service error occurred: <code>%s</code></p>',
       htmlspecialchars($e->getMessage()));
@@ -99,17 +110,8 @@ END;
     $htmlBody .= sprintf('<p>An client error occurred: <code>%s</code></p>',
       htmlspecialchars($e->getMessage()));
   }
-}
 
-/*
-<!doctype html>
-<html>
-  <head>
-    <title>YouTube Search</title>
-  </head>
-  <body>
-    <?=$htmlBody?>
-  </body>
-</html>
-*/
+  
+  return $videos_out;
+}
 ?>

@@ -31,9 +31,9 @@ function showTitleScreen(p1,p2){
     //Maj logos
     $("ul#animalsPlayer").html(
         "<li><a data-hover='"+getlogo(p1)+"' onclick='vote(1)' href='#'><img src='img/"+getlogo(p1)+"' /></a>"+
-            "<span id='scoreP1'>P1</span></li>"+
+            "<span id='scoreP1'>"+p1.toUpperCase()+"</span></li>"+
         "<li><a data-hover='"+getlogo(p2)+"' onclick='vote(2)' href='#'><img src='img/"+getlogo(p2)+"' /></a>"+
-            "<span id='scoreP2'>P2</span></li>"
+            "<span id='scoreP2'>"+p2.toUpperCase()+"</span></li>"
     );
         
     $("ul#animalsPlayer li a img").hover(function(){
@@ -83,4 +83,11 @@ function vote(id){
 
 function toggleAnimals(){
     $("div#moreAnimals").toggle();
+    
+    $(document).mouseup(function (e){
+        //hide menu on click out if there are opened							
+        if ($("div#moreAnimals").has(e.target).length === 0 && !$("div#moreAnimals").is(e.target)){            
+            $("div#moreAnimals").hide();
+        }
+    });     
 }

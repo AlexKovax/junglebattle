@@ -115,11 +115,7 @@ $(document).ready(function(){
     //tips
     $("a.tips").tipTip({
         defaultPosition: "top"
-    });
-    $("a.hover").hover(function(){
-        
-    })
-    
+    });    
 });
 
 $(window).resize(function(){

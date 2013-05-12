@@ -62,25 +62,58 @@ if ($_GET['action']) {
 function get_animal_list() {
   global $dbconn;
 
-  $query = 'SELECT animal_id, name, image FROM animals';
+  $query = '
+            SELECT
+              animal_id, name, image
+            FROM
+              animals
+           ';
   $result = pg_query_params($dbconn, $query, array()) or die('Query failed: ' . pg_last_error());
 
   $animals = array();
   while ($data = pg_fetch_assoc($result))
   {
-    $animals[] = array(
-                       'name' => $data['name'],
-                       'image' => $data['image'],
-                       'rank' => 0
-                      );
+    $animals[intval($data['animal_id'])] = array(
+                                         'animal_id' => intval($data['animal_id']),
+                                         'name' => $data['name'],
+                                         'image' => $data['image'],
+                                         'rank' => 0
+                                        );
   }
   return $animals;
 }
 
 
 function get_animal_list_json() {
-  echo json_encode(get_animal_list());
-}  
+  global $dbconn;
+  $animals = get_animal_list();
+
+  $query = '
+            SELECT a.animal_id, a.name, a.image, count(*) as cnt
+            FROM
+              votes vt,
+              videos v,
+                     animals a
+            WHERE
+                vt.video_id = v.video_id
+            AND (    ( v.animal1_id = a.animal_id AND vt.winner = 1 )
+                  OR ( v.animal2_id = a.animal_id AND vt.winner = 2 )
+                )
+            GROUP BY
+              a.animal_id, a.name, a.image
+            ORDER BY cnt DESC
+           ';
+  $result = pg_query_params($dbconn, $query, array()) or die('Query failed: ' . pg_last_error());
+  $rank_current = 1;
+  while ($data = pg_fetch_assoc($result))
+  {
+    $animals[intval($data['animal_id'])]['rank'] = $rank_current;
+    $rank_current += 1;
+  }
+
+  echo json_encode($animals);
+}
+
 
 
 
@@ -101,10 +134,15 @@ function get_videos_one($animal1, $max_results) {
   global $DEVELOPER_KEY;
   $animals = get_animal_list();
 
+  //print_r($animals);
+
   while(true) {
     $selected = array_rand($animals, 1);
-    if( $selected[0]['name'] != $animal1 ) {
-      return get_videos_two($animals1, $animals[$selected[0]]['name'], $max_results);
+    //echo $selected[0] . '<br>';
+    //echo $animals[$selected[0]]['name'] . '<br>';
+    //echo $animal1  . '<br>';
+    if( $animals[$selected]['name'] != $animal1 ) {
+      return get_videos_two($animal1, $animals[$selected]['name'], $max_results);
     }
   }
 }
@@ -114,13 +152,26 @@ function get_videos_one($animal1, $max_results) {
 
 
 function get_videos_two($animal1, $animal2, $max_results) {
-  global $DEVELOPER_KEY;
+  global $dbconn, $DEVELOPER_KEY;
 
-  //ini_set('memory_limit', '-1');
+  $animals = get_animal_list();
+  $animals_by_name = array();
+  foreach ($animals as $animal) {
+    $animals_by_name[$animal['name']] = $animal;
+  }
 
-  /* Set $DEVELOPER_KEY to the "API key" value from the "Access" tab of the
-  Google APIs Console <http://code.google.com/apis/console#access>
-  Please ensure that you have enabled the YouTube Data API for your project. */
+  $animal1_fixed = 0;
+  $animal2_fixed = 0;
+
+  if($animals_by_name[$animal1]['animal_id'] <= $animals_by_name[$animal2]['animal_id']) {
+    $animal1_fixed = $animal1;
+    $animal2_fixed = $animal2;
+  } else {
+    $animal1_fixed = $animal2;
+    $animal2_fixed = $animal1;
+  }
+
+  $user_id = $_SERVER['REMOTE_ADDR'];
 
   $client = new Google_Client();
   $client->setDeveloperKey($DEVELOPER_KEY);
@@ -134,7 +185,7 @@ function get_videos_two($animal1, $animal2, $max_results) {
 
   try {
     $searchResponse = $youtube->search->listSearch('id,snippet', array(
-      'q' => "$animal1 vs $animal2",
+      'q' => "$animal1_fixed vs $animal2_fixed",
       'maxResults' => $max_results,
       //'videoDuration' => "short",
       //'order' => 'viewCount',
@@ -149,11 +200,15 @@ function get_videos_two($animal1, $animal2, $max_results) {
             $searchResult['snippet']['categoryId']
             );
           $videos_out[] = array(
-                                'animal1' => $animal1,
-                                'animal2' => $animal2,
+                                'animal1' => $animal1_fixed,
+                                'animal2' => $animal2_fixed,
                                 'video_id' => $searchResult['id']['videoId'],
                                 'source' => 'youtube'
                                );
+
+          $query = 'INSERT INTO videos (video_id, animal1_id, animal2_id, date_added, added_type) SELECT $1, $2, $3, now(), $4
+                    WHERE NOT EXISTS (SELECT video_id FROM videos WHERE video_id=$1)';
+          pg_query_params($dbconn, $query, array($searchResult['id']['videoId'], $animals_by_name[$animal1_fixed]['animal_id'], $animals_by_name[$animal2_fixed]['animal_id'], 'youtube')) or die('Query failed: ' . pg_last_error());
 
           break;
         case 'youtube#channel':

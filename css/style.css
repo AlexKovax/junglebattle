@@ -103,7 +103,7 @@ body header div#containerAnimals ul li.rank2:after{
     z-index: 200;
     content: ""
 }
-body header div#containerAnimals ul li.p1select:before{
+body header ul li.p1select:before{
     position: absolute;
     top: 50px;
     left: 40px;
@@ -113,7 +113,7 @@ body header div#containerAnimals ul li.p1select:before{
     z-index: 2200;
     content: ""
 }
-body header div#containerAnimals ul li.p2select:before{
+body header ul li.p2select:before{
     position: absolute;
     top: 50px;
     left: 40px;

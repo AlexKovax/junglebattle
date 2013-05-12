@@ -17,6 +17,7 @@ var tabVideos;
 var voted=false;
 var p1select="";
 var p2select="";
+var nvideos=10;
 
 //animal list init
 $.ajax({
@@ -47,7 +48,7 @@ $.ajax({
            p1select=$(this).data("animal");
            $(this).parent("li").addClass("p1select");
             $.ajax({
-                url: "http://junglebattle.com/api/videos/"+p1select+"/10"
+                url: "http://junglebattle.com/api/videos/"+p1select+"/"+nvideos
             }).done(function(data){
                 tabVideos=data;
                 currentVideo=-1;
@@ -57,7 +58,7 @@ $.ajax({
            p2select=$(this).data("animal");
            $(this).parent("li").addClass("p2select");
             $.ajax({
-                url: "http://junglebattle.com/api/videos/"+p2select+"/"+p1select+"/10"
+                url: "http://junglebattle.com/api/videos/"+p2select+"/"+p1select+"/"+nvideos
             }).done(function(data){
                 tabVideos=data;
                 currentVideo=-1;
@@ -75,13 +76,13 @@ function onYouTubeIframeAPIReady() {
         url: "http://junglebattle.com/api/videos/10"
     }).done(function(data){
         tabVideos=data;
-        showTitleScreen(data[0].animal1,data[0].animal2);
+        showTitleScreen("dog","cat");
         
         //init (first load)
         player = new YT.Player('player', {
             height: '390',
             width: '640',
-            videoId: data[0].video_id,
+            videoId: 'Qef16GuvaDU',
             playerVars: { 'autoplay': 1, 'controls': 1, 'border': 0, 'showinfo': 0, 'showsearch': 0, 'rel': 0 },
             events: {
                 'onReady': onPlayerReady,

@@ -46,7 +46,10 @@ body section div#titlePlayer{
     font-size: 40px;
     padding-top: 100px;
 }
-
+body header div#containerAnimals{
+    text-align: right;
+    padding-right: 85px;
+}
 body header div#containerAnimals ul{
     margin: 0;
     padding: 0;
@@ -74,8 +77,8 @@ body header div#containerAnimals ul li.rank1:after{
     position: absolute;
     top: -10px;
     left: -10px;
-    width: 32px;
-    height: 59px;
+    width: 31px;
+    height: 56px;
     background: url('../img/COCARDE2.png');
     z-index: 200;
     content: ""
@@ -84,9 +87,29 @@ body header div#containerAnimals ul li.rank2:after{
     position: absolute;
     top: -10px;
     left: -10px;
-    width: 32px;
-    height: 59px;
+    width: 31px;
+    height: 56px;
     background: url('../img/COCARDE3.png');
+    z-index: 200;
+    content: ""
+}
+body header div#containerAnimals ul li.p1select:before{
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    width: 31px;
+    height: 31px;
+    background: url('../img/RONDP1.png');
+    z-index: 200;
+    content: ""
+}
+body header div#containerAnimals ul li.p2select:before{
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    width: 31px;
+    height: 31px;
+    background: url('../img/RONDP2.png');
     z-index: 200;
     content: ""
 }
@@ -100,6 +123,8 @@ body header div#showMore{
     text-align: right;
     margin-top: 10px;
     font-size: 20px;
+    position: relative;
+    padding-right: 85px;
 }
 
 body header div#showMore span{
@@ -111,15 +136,65 @@ body header div#showMore a{
     float: right;
     color: #000;
     text-decoration: none;
+    text-align:left;
+    z-index:2500;
+    
 }
+body header div#showMore a img{
+    display:block;
+    margin-top:-5px;
+}
+
+body header div#moreAnimals{
+    display: none;
+    position:absolute;
+    z-index: 2000;
+    top:15px;
+    right: 85px;
+    background: #fff;
+    border: solid 7px #000;
+    width: 505px;
+    padding: 0px 30px 30px 0px;
+    text-align: center;
+}
+body header div#moreAnimals ul{
+    margin: 0;
+    padding: 0;
+}
+body header div#moreAnimals ul li{
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    position: relative;
+    z-index: 100;
+    margin-left: 30px;
+    margin-top: 30px;
+}
+body header div#moreAnimals ul li img{
+    width: 70px;
+    height: 70px;
+}
+
 
 body section ul#animalsPlayer{
     list-style-type: none;
 }
 
 body section ul#animalsPlayer li{
-    margin-top: 20px;
+    margin-top: 10px;
     position: relative;
+    text-align: center;
+}
+body section ul#animalsPlayer li:last-child{
+    margin-top: 30px;
+    position: relative;
+    
+}
+body section ul#animalsPlayer li span{
+    display: block;
+    margin-top: 15px;
+    font-size: 20px;
+    
 }
 
 /********/
@@ -138,20 +213,20 @@ body section div.nextVideo{
 body ul#animalsPlayer li.winner:after{
     position: absolute;
     top: -10px;
-    left: -10px;
-    width: 32px;
-    height: 59px;
-    background: url('../img/COCARDE3.png');
+    left: 0px;
+    width: 48px;
+    height: 88px;
+    background: url('../img/COCARDEWIN.png');
     z-index: 200;
     content: ""
 }
 body ul#animalsPlayer li.select:before{
     position: absolute;
     top: -10px;
-    left: 80px;
-    width: 32px;
-    height: 59px;
-    background: url('../img/COCARDE3.png');
+    left: 90px;
+    width: 48px;
+    height: 48px;
+    background: url('../img/RONDplus148.png');
     z-index: 200;
     content: ""
 }

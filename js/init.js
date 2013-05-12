@@ -15,6 +15,8 @@ var tabAnimals;
 var currentVideo=0;
 var tabVideos;
 var voted=false;
+var p1select="";
+var p2select="";
 
 //animal list init
 $.ajax({
@@ -22,11 +24,46 @@ $.ajax({
 }).done(function(data){
     tabAnimals=data;
     console.log(data);
-    for(i in tabAnimals){
-        $("div#containerAnimals ul").append("<li class='rank"+i+"'><a href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
+    for(i in tabAnimals){        
         if(i > 6)
-            break;
+            $("div#moreAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
+        else
+            $("div#containerAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
     }
+    
+    //player selection handling
+    $("a.animalPlayer").click(function(e){
+        console.log("hello");
+       if(p1select=="" || (p1select!="" && p2select!="")){
+           if(p1select!="" && p2select!=""){
+               p1select="";
+               p2select="";
+               $("li").removeClass("p1select p2select");
+           }
+           
+           p1select=$(this).data("animal");
+           $(this).parent("li").addClass("p1select");
+            $.ajax({
+                url: "http://junglebattle.com/api/videos/"+p1select+"/10"
+            }).done(function(data){
+                tabVideos=data;
+                currentVideo=-1;
+                loadNextVideo();
+            });
+       }else if(p1select!="" && p2select==""){
+           p2select=$(this).data("animal");
+           $(this).parent("li").addClass("p2select");
+            $.ajax({
+                url: "http://junglebattle.com/api/videos/"+p1select+"/"+p2select+"/10"
+            }).done(function(data){
+                tabVideos=data;
+                currentVideo=-1;
+                loadNextVideo();
+            });            
+        }
+        
+        e.preventDefault();
+    });    
 });
 
 function onYouTubeIframeAPIReady() {
@@ -75,7 +112,8 @@ $(document).ready(function(){
     //tips
     $("a.tips").tipTip({
         defaultPosition: "top"
-    }); 
+    });     
+    
 });
 
 $(window).resize(function(){

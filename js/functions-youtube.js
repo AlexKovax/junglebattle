@@ -30,12 +30,14 @@ function showTitleScreen(p1,p2){
     $("div#titlePlayer").show();
     //Maj logos
     $("ul#animalsPlayer").html(
-        "<li><a data-hover='"+getlogo(p1)+"' onclick='vote(1)' href='#'><img src='img/"+getlogo(p1)+"' /></a></li>"+
-        "<li><a data-hover='"+getlogo(p2)+"' onclick='vote(2)' href='#'><img src='img/"+getlogo(p2)+"' /></a></li>"
+        "<li><a data-hover='"+getlogo(p1)+"' onclick='vote(1)' href='#'><img src='img/"+getlogo(p1)+"' /></a>"+
+            "<span id='scoreP1'>P1</span></li>"+
+        "<li><a data-hover='"+getlogo(p2)+"' onclick='vote(2)' href='#'><img src='img/"+getlogo(p2)+"' /></a>"+
+            "<span id='scoreP2'>P2</span></li>"
     );
         
     $("ul#animalsPlayer li a img").hover(function(){
-        $(this).attr("src","img/RONDVERT.png");
+        $(this).attr("src","img/RONDplus1.png");
     },function(){
         $(this).attr("src","img/"+$(this).parent("a").data("hover"));
     });
@@ -70,7 +72,15 @@ function vote(id){
             if(id == 1)
                 $("ul#animalsPlayer li:first").addClass("select");
             else
-                $("ul#animalsPlayer li:nth-child(2)").addClass("select");        
+                $("ul#animalsPlayer li:nth-child(2)").addClass("select"); 
+            //maj score
+            console.log(data);
+            $("span#scoreP1").append(": "+data[0].num_votes+" votes");
+            $("span#scoreP2").append(": "+data[1].num_votes+" votes");
         });
     }
+}
+
+function toggleAnimals(){
+    $("div#moreAnimals").toggle();
 }

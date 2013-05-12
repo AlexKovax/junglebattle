@@ -24,6 +24,7 @@ $.ajax({
 }).done(function(data){
     tabAnimals=data;
     console.log(data);
+    var i = 0;
     for(i in tabAnimals){        
         if(i > 6)
             $("div#moreAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
@@ -33,7 +34,9 @@ $.ajax({
     
     //player selection handling
     $("a.animalPlayer").click(function(e){
-        console.log("hello");
+        //console.log("hello");
+        $("div#moreAnimals").hide();
+        
        if(p1select=="" || (p1select!="" && p2select!="")){
            if(p1select!="" && p2select!=""){
                p1select="";
@@ -54,7 +57,7 @@ $.ajax({
            p2select=$(this).data("animal");
            $(this).parent("li").addClass("p2select");
             $.ajax({
-                url: "http://junglebattle.com/api/videos/"+p1select+"/"+p2select+"/10"
+                url: "http://junglebattle.com/api/videos/"+p2select+"/"+p1select+"/10"
             }).done(function(data){
                 tabVideos=data;
                 currentVideo=-1;
@@ -112,7 +115,10 @@ $(document).ready(function(){
     //tips
     $("a.tips").tipTip({
         defaultPosition: "top"
-    });     
+    });
+    $("a.hover").hover(function(){
+        
+    })
     
 });
 

@@ -26,7 +26,7 @@ function stopVideo() {
 
 function showTitleScreen(p1,p2){
     //Maj surimp
-    $("div#titlePlayer").html(p1+" VS "+p2);
+    $("div#titlePlayer span").html(p1.toUpperCase()+" V.S. "+p2.toUpperCase());
     $("div#titlePlayer").show();
     //Maj logos
     $("ul#animalsPlayer").html(

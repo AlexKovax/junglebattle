@@ -40,12 +40,22 @@ body section div#titlePlayer{
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(0,0,0,0.8);
     z-index: 1000;
     text-align: center;
     font-size: 40px;
-    padding-top: 100px;
+    padding-top: 60px;
+    color: #fff;
 }
+
+body section div#titlePlayer div#arrow1{
+    margin-top: 60px;
+    margin-left: 20px;
+    background: url("../img/FLECHEGAUCHE.png") no-repeat 0 0;
+    height: 52px;
+}
+
+
 body header div#containerAnimals{
     text-align: right;
     padding-right: 85px;
@@ -100,7 +110,7 @@ body header div#containerAnimals ul li.p1select:before{
     width: 31px;
     height: 31px;
     background: url('../img/RONDP1.png');
-    z-index: 200;
+    z-index: 2200;
     content: ""
 }
 body header div#containerAnimals ul li.p2select:before{
@@ -110,7 +120,7 @@ body header div#containerAnimals ul li.p2select:before{
     width: 31px;
     height: 31px;
     background: url('../img/RONDP2.png');
-    z-index: 200;
+    z-index: 2200;
     content: ""
 }
 
@@ -125,6 +135,7 @@ body header div#showMore{
     font-size: 20px;
     position: relative;
     padding-right: 85px;
+    padding-top: 10px;
 }
 
 body header div#showMore span{
@@ -149,9 +160,9 @@ body header div#moreAnimals{
     display: none;
     position:absolute;
     z-index: 2000;
-    top:15px;
+    top:5m5px;
     right: 85px;
-    background: #fff;
+    background: rgba(255,255,255,0.8);
     border: solid 7px #000;
     width: 505px;
     padding: 0px 30px 30px 0px;

@@ -30,7 +30,7 @@ srand(make_seed());
 $app->get('/animals', 'get_animal_list_json');
 $app->get('/videos/:max_results', 'get_videos_zero');
 $app->get('/videos/:animal1/:max_results', 'get_videos_one');
-$app->get('/videos/:animal1/:animal2/:max_results', 'get_videos_two');
+$app->get('/videos/:animal1/:animal2/:max_results', 'get_videos_two_json');
 $app->get('/vote/:video_id/:winner', 'vote');
 $app->get('/complete/:video_ids', 'get_video_details');
 $app->run();
@@ -101,17 +101,38 @@ function get_animal_list_json() {
                 )
             GROUP BY
               a.animal_id, a.name, a.image
-            ORDER BY cnt DESC
+            ORDER BY cnt DESC, a.animal_id DESC
            ';
   $result = pg_query_params($dbconn, $query, array()) or die('Query failed: ' . pg_last_error());
   $rank_current = 1;
+
+  $animals_ranked = array();
   while ($data = pg_fetch_assoc($result))
   {
     $animals[intval($data['animal_id'])]['rank'] = $rank_current;
+
+    $animals_ranked[intval($data['animal_id'])] = array(
+                                                         'animal_id' => intval($data['animal_id']),
+                                                         'name' => $data['name'],
+                                                         'image' => $data['image'],
+                                                         'rank' => $rank_current
+                                                        );
     $rank_current += 1;
   }
 
-  echo json_encode($animals);
+  foreach ($animals as $animal) {
+    if (!array_key_exists($animals_ranked, $animal['animal_id'])) {
+      $animals_ranked[$animal['animal_id']] = $animal;
+    }
+  }
+
+  $animals_out = array();
+
+  foreach ($animals_ranked as $animal) {
+    $animals_out[] = $animal;
+  }
+
+  echo json_encode($animals_out);
 }
 
 
@@ -121,9 +142,18 @@ function get_animal_list_json() {
 function get_videos_zero($max_results) {
   global $DEVELOPER_KEY;
   $animals = get_animal_list();
-  $selected = array_rand($animals, 2);
+
+  $num_pairs = 10;
+  $selected = array_rand($animals, $num_pairs * 2);
   //echo length($animals) . '<br>';
-  return get_videos_two($animals[$selected[0]]['name'], $animals[$selected[1]]['name'], $max_results);
+  $videos = array();
+  for($i=0;$i<$num_pairs;$i++) {
+    $videos_current = get_videos_two($animals[$selected[$i*2]]['name'], $animals[$selected[$i*2+1]]['name'], $max_results);
+    $videos = array_merge($videos, $videos_current);
+  }
+
+  shuffle($videos);
+  echo json_encode($videos);
 }
 
 
@@ -134,21 +164,26 @@ function get_videos_one($animal1, $max_results) {
   global $DEVELOPER_KEY;
   $animals = get_animal_list();
 
+  $num_pairs = 10;
   //print_r($animals);
 
-  while(true) {
-    $selected = array_rand($animals, 1);
-    //echo $selected[0] . '<br>';
-    //echo $animals[$selected[0]]['name'] . '<br>';
-    //echo $animal1  . '<br>';
-    if( $animals[$selected]['name'] != $animal1 ) {
-      return get_videos_two($animal1, $animals[$selected]['name'], $max_results);
+  $selected = array_rand($animals, $num_pairs);
+  $videos = array();
+  for($i=0;$i<$num_pairs;$i++) {
+    if( $animals[$selected[$i]]['name'] != $animal1 ) {
+      $videos_current = get_videos_two($animal1, $animals[$selected[$i]]['name'], $max_results);
+      $videos = array_merge($videos, $videos_current);
     }
   }
+
+  echo json_encode($videos);
 }
 
 
 
+function get_videos_two_json($animal1, $animal2, $max_results) {
+  echo json_encode(get_videos_two($animal1, $animal2, $max_results));
+}
 
 
 function get_videos_two($animal1, $animal2, $max_results) {
@@ -187,6 +222,8 @@ function get_videos_two($animal1, $animal2, $max_results) {
     $searchResponse = $youtube->search->listSearch('id,snippet', array(
       'q' => "$animal1_fixed vs $animal2_fixed",
       'maxResults' => $max_results,
+      //'videoEmbeddable' => 'true',
+      //'videoCategoryId' => '12'
       //'videoDuration' => "short",
       //'order' => 'viewCount',
     ));
@@ -197,7 +234,7 @@ function get_videos_two($animal1, $animal2, $max_results) {
           $videos .= sprintf('<li>%s (%s) - (%s) - (%s)</li>', $searchResult['snippet']['title'],
             $searchResult['id']['videoId'],
             $searchResult['snippet']['description'],
-            $searchResult['snippet']['categoryId']
+            $searchResult['snippet']['videoCategoryId']
             );
           $videos_out[] = array(
                                 'animal1' => $animal1_fixed,
@@ -205,6 +242,13 @@ function get_videos_two($animal1, $animal2, $max_results) {
                                 'video_id' => $searchResult['id']['videoId'],
                                 'source' => 'youtube'
                                );
+          /*
+          if( $animals_by_name[$animal1_fixed]['animal_id'] == null || $animals_by_name[$animal2_fixed]['animal_id'] == null) {
+            echo 'error<br>';
+            echo $animal1_fixed . ' | ' . $animal2_fixed . '<br>';
+            echo $animals_by_name[$animal1_fixed]['animal_id'] . ' | ' . $animals_by_name[$animal2_fixed]['animal_id'] . '<br>';
+          }
+          */
 
           $query = 'INSERT INTO videos (video_id, animal1_id, animal2_id, date_added, added_type) SELECT $1, $2, $3, now(), $4
                     WHERE NOT EXISTS (SELECT video_id FROM videos WHERE video_id=$1)';
@@ -238,9 +282,7 @@ function get_videos_two($animal1, $animal2, $max_results) {
     }
   }
 
-
-  
-  echo json_encode($videos_out2);
+  return $videos_out2;
 }
 
 

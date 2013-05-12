@@ -218,10 +218,14 @@ function get_videos_two($animal1, $animal2, $max_results) {
   $channels = '';
   $playlists = '';
 
+  $orders = array('relevance', 'rating', 'viewCount');
+  $order = $orders[array_rand($order_type, 1)];
+
   try {
     $searchResponse = $youtube->search->listSearch('id,snippet', array(
       'q' => "$animal1_fixed vs $animal2_fixed",
       'maxResults' => $max_results,
+      'order' => $order,
       //'videoEmbeddable' => 'true',
       //'videoCategoryId' => '12'
       //'videoDuration' => "short",

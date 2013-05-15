@@ -9,13 +9,19 @@ var player,
     tabAnimals,
     tabVideos;
 
-var voted=false;
+var voted = false;
 var initDone = false;
+var isPlaying = false;
+
 var p1select="";
 var p2select="";
 var nvideos=10;
 var currentVideo = 0;
 var apiUrl="http://junglebattle.com/api";
+
+var urlp1="";
+var urlp2="";
+var urlvideo="";
 
 //////////////////////////
 // FUNCTIONS 
@@ -36,8 +42,9 @@ function animalsInit(){
         //CLICK player selection handling
         $("a.animalPlayer").click(function(e){
             $("div#moreAnimals").hide();
-
-            if(p1select=="" || (p1select!="" && p2select!="")){
+            $("li").removeClass("p1selectTmp p2selectTmp");
+            
+            if(p1select==="" || (p1select!="" && p2select!="")){
                 if(p1select!="" && p2select!=""){
                     p1select="";
                     p2select="";
@@ -49,8 +56,7 @@ function animalsInit(){
                     url: "http://junglebattle.com/api/videos/"+p1select+"/"+nvideos
                 }).done(function(data){
                     tabVideos=data;
-                    currentVideo=-1;
-                    loadNextVideo();
+                    loadVideoByNumber(0);
                 });
             }else if(p1select!="" && p2select==""){
                 p2select=$(this).data("animal");
@@ -59,8 +65,7 @@ function animalsInit(){
                     url: "http://junglebattle.com/api/videos/"+p2select+"/"+p1select+"/"+nvideos
                 }).done(function(data){
                     tabVideos=data;
-                    currentVideo=-1;
-                    loadNextVideo();
+                    loadVideoByNumber(0);
                 });
             }
             e.preventDefault();
@@ -69,55 +74,45 @@ function animalsInit(){
         //HOVER
         $("a.animalPlayer").hover(function(){
             if(p1select=="" || (p1select!="" && p2select!="")){
-                $(this).parent("li").toggleClass("p1select");
+                $(this).parent("li").addClass("p1selectTmp");
             }else if(p1select!="" && p2select==""){
-                $(this).parent("li").toggleClass("p2select");
+                $(this).parent("li").addClass("p2selectTmp");
             }
-        });      
+        },function(){
+            if(p1select=="" || (p1select!="" && p2select!="")){
+                $(this).parent("li").removeClass("p1selectTmp");
+            }else if(p1select!="" && p2select==""){
+                $(this).parent("li").removeClass("p2selectTmp");
+            }
+        });
     });
 }
 
 //fired when Youtube iframe API is ready
 function onYouTubeIframeAPIReady() {
     //Jquery to get the first video
+    var args="";
+    if(urlp1!="")
+        args="/"+urlp1;
+    if(urlp2!="")
+        args+="/"+urlp2;
+    
     $.ajax({
-        url: apiUrl+"/videos/10"
+        url: apiUrl+"/videos"+args+"/10"
     }).done(function(data){
         tabVideos=data;
-        showTitleScreen("dog","cat");
-
-        tabVideos.unshift({'video_id':'Qef16GuvaDU', 'animal1_id': 1, 'animal2_id': 2});
-        
-        //init (first load)
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: 'Qef16GuvaDU',
-            playerVars: {
-                'autoplay': 1, 
-                'controls': 1, 
-                'border': 0, 
-                'showinfo': 0, 
-                'showsearch': 0, 
-                'rel': 0
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-
-        setTimeout(clearTitleScreen, 5000);
+        if(urlvideo!="" && urlp1!="" && urlp2!="")
+            tabVideos.unshift({'video_id':urlvideo, 'animal1': urlp1, 'animal2': urlp2});
+        loadPlayer();//will trigger the play in onPlayerReady function
     });
-
 }
 
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+    loadVideoByNumber(0);
     var newWidth = $("div#containerPlayer").width();
     var newHeight = newWidth * 0.5625;
-    player.setSize(newWidth, newHeight);
-
+    player.setSize(newWidth, newHeight);   
 }
 
 // Called to display the title at the end of the video
@@ -129,9 +124,7 @@ function onPlayerStateChange(event) {
 }
 
 
-function init(){
-    console.log("init");
-    
+function init(){    
     animalsInit();
     
     // This code loads the IFrame Player API code asynchronously.
@@ -140,28 +133,31 @@ function init(){
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     
-    initOK=true;
+    initDone=true;
 }
 
-$(document).ready(function(){
-    //init
-    init();
-    
+//////////////////////
+// READY
+$(document).ready(function(){    
     //tips
     $("a.tips").tipTip({
         defaultPosition: "top"
     });
  
     //PATH
-    //Path.map("#!/home").to(init);
+    Path.map("#!/home").to(init);
+    
     Path.map("#!/video/:id/:p1/:p2").to(function(){
-        //document.write("video = "+this.params['id']);
-        /*if(! initOK)
-            init();*/
-        
-        
+        urlp1=this.params['p1'];
+        urlp2=this.params['p2'];
+        urlvideo=this.params['id'];
+        if(! initDone)
+            init();
+        else
+            loadVideoFromUrl(this.params['p1'],this.params['p2'],this.params['id']);        
     });
-    //Path.root("#!/home");
+    
+    Path.root("#!/home");
     Path.listen();
 });
 

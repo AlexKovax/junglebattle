@@ -43,6 +43,11 @@ function showTitleScreen(p1,p2){
     });
 }
 
+function showEndScreen(p1,p2){
+    //Show surimp
+    $("div#endPlayer").show();
+}
+
 function getlogo(name){
     for(j in tabAnimals)
         if(tabAnimals[j].name == name)
@@ -53,13 +58,16 @@ function getlogo(name){
 function clearTitleScreen(){
     $("div#titlePlayer").hide();
 }
+function clearEndScreen(){
+    $("div#endPlayer").hide();
+}
 
 function vote(id){
     if(! voted){
         $("ul#animalsPlayer li a img").unbind('mouseenter');
 
         $.ajax({
-            url: "http://junglebattle.com/api/vote/"+tabVideos[currentVideo].video_id+"/"+id
+            url: apiUrl+"/vote/"+tabVideos[currentVideo].video_id+"/"+id
         }).done(function(data){
             voted=true;
             //traitement graphique

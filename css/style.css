@@ -47,6 +47,24 @@ body section div#titlePlayer{
     padding-top: 60px;
     color: #fff;
 }
+ body section div#endPlayer{
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 30px;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 1000;
+    text-align: center;
+    font-size: 40px;
+    padding-top: 60px;
+    color: #fff;
+}
+
+body section div#endPlayer{
+    display: none;
+}
+
 
 body section div#titlePlayer div#arrow1{
     margin-top: 60px;
@@ -55,10 +73,25 @@ body section div#titlePlayer div#arrow1{
     height: 52px;
 }
 
+body section div#endPlayer div#arrow1{
+    margin-top: 30px;
+    margin-left: 20px;
+    background: url("../img/FLECHEGAUCHE.png") no-repeat 0 0;
+    height: 52px;
+}
+
+body section div#endPlayer div#arrow2{
+    margin-top: 20px;
+    margin-right: 20px;
+    background: url("../img/FLECHEDROITE.png") no-repeat right 0;
+    height: 63px;
+    padding-right: 65px;
+}
+
 
 body header div#containerAnimals{
     text-align: right;
-    padding-right: 85px;
+    padding-right: 25px;
 }
 body header div#containerAnimals ul{
     margin: 0;
@@ -134,13 +167,14 @@ body header div#showMore{
     margin-top: 10px;
     font-size: 20px;
     position: relative;
-    padding-right: 85px;
+    padding-right: 25px;
     padding-top: 10px;
 }
 
 body header div#showMore span{
     display: block;
     float: left;
+    margin-left: 80px;
 }
 body header div#showMore a{
     display: block;
@@ -189,6 +223,8 @@ body header div#moreAnimals ul li img{
 
 body section ul#animalsPlayer{
     list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 body section ul#animalsPlayer li{
@@ -208,9 +244,13 @@ body section ul#animalsPlayer li span{
     
 }
 
+body section div#rightColPlayer{
+    text-align: center;
+}
+
 /********/
 body section div.rateVideo{
-    margin-top: 20px;
+    /*margin-top: 20px;*/
 }
 
 body section div.shareVideo{
@@ -224,7 +264,7 @@ body section div.nextVideo{
 body ul#animalsPlayer li.winner:after{
     position: absolute;
     top: -10px;
-    left: 0px;
+    left: 20px;
     width: 48px;
     height: 88px;
     background: url('../img/COCARDEWIN.png');
@@ -234,7 +274,7 @@ body ul#animalsPlayer li.winner:after{
 body ul#animalsPlayer li.select:before{
     position: absolute;
     top: -10px;
-    left: 90px;
+    left: 100px;
     width: 48px;
     height: 48px;
     background: url('../img/RONDplus148.png');

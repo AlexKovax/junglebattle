@@ -86,8 +86,8 @@ function onYouTubeIframeAPIReady() {
         tabVideos=data;
         showTitleScreen("dog","cat");
 
-        tabVideos.unshift({'video_id':'Qef16GuvaDU', 'animal1_id': 1, 'animal2_id': 2});//bugfix
-
+        tabVideos.unshift({'video_id':'Qef16GuvaDU', 'animal1_id': 1, 'animal2_id': 2});
+        
         //init (first load)
         player = new YT.Player('player', {
             height: '390',

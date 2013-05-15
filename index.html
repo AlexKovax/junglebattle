@@ -38,7 +38,7 @@
                 </div>
             </header>
 
-            <section class="row">              
+            <section class="row">
                 <div id="leftColPlayer" class="span2 offset1">
                     <ul id="animalsPlayer"></ul>
                 </div>
@@ -52,8 +52,8 @@
                     </div>
                     <div id="endPlayer">
                         <div id="arrow2">Rate & share the video</div>
-                        <div id="arrow1">Vote for the winner!</div>                        
-                    </div>                    
+                        <div id="arrow1">Vote for the winner!</div>
+                    </div>
                 </div>
                 <div id="rightColPlayer" class="span2">
                     <div class="rateVideo">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="shareVideo">
                         SHARE THE FIGHT:
-                        <br />                        
+                        <br />
                         <a class="tips" title="Share on Twitter" href="#"><img src="img/TWITTER.png" /></a>
                         <a class="tips" title="Share on Facebook" href="#"><img src="img/FACEBOOK.png" /></a>
                         <a class="tips" title="Share on Tumblr" href="#"><img src="img/TUMBLR.png" /></a>
@@ -74,20 +74,30 @@
                         <a href="javascript:loadNextVideo()">
                             <img src="img/NEXT.png" />
                         </a>
-                    </div>                    
+                    </div>
                 </div>
             </section>
 
             <footer></footer>
-        </div>        
+        </div>
 
 
         <!--scripts-->
         <script src="http://code.jquery.com/jquery.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/vendor/jquery.tipTip.minified.js"></script>  
+        <script src="js/vendor/jquery.tipTip.minified.js"></script>
         <script src="js/vendor/path.min.js"></script>
         <script src="js/functions-youtube.js"></script>
         <script src="js/init.js"></script>
+
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-40867213-1', 'junglebattle.com');
+            ga('send', 'pageview');
+        </script>
     </body>
 </html>

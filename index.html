@@ -39,7 +39,7 @@
             </header>
 
             <section class="row">              
-                <div class="span2 offset1">
+                <div id="leftColPlayer" class="span2 offset1">
                     <ul id="animalsPlayer"></ul>
                 </div>
                 <div id="containerPlayer" class="span6">
@@ -49,19 +49,22 @@
                     <div id="titlePlayer">
                         <span></span>
                         <div id="arrow1">Vote for the winner!</div>
-                        <!--<div id="arrow2"></div>-->
                     </div>
+                    <div id="endPlayer">
+                        <div id="arrow2">Rate & share the video</div>
+                        <div id="arrow1">Vote for the winner!</div>                        
+                    </div>                    
                 </div>
-                <div class="span2">
+                <div id="rightColPlayer" class="span2">
                     <div class="rateVideo">
-                        RATE:
+                        RATE THIS VIDEO:
                         <br />
                         <a class="tips" title="I loved it!" href="#"><img src="img/COEUR.png" /></a>
                         <a class="tips" title="Shitty video!" href="#"><img src="img/CACA.png" /></a>
                         <a class="tips" title="Flag: really gore!" href="#"><img src="img/HACHE.png" /></a>
                     </div>
                     <div class="shareVideo">
-                        SHARE:
+                        SHARE THE FIGHT:
                         <br />                        
                         <a class="tips" title="Share on Twitter" href="#"><img src="img/TWITTER.png" /></a>
                         <a class="tips" title="Share on Facebook" href="#"><img src="img/FACEBOOK.png" /></a>
@@ -83,6 +86,7 @@
         <script src="http://code.jquery.com/jquery.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/jquery.tipTip.minified.js"></script>  
+        <script src="js/vendor/path.min.js"></script>
         <script src="js/functions-youtube.js"></script>
         <script src="js/init.js"></script>
     </body>

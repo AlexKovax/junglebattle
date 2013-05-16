@@ -40,8 +40,7 @@ function animalsInit(){
         }
 
         //CLICK player selection handling
-        $("a.animalPlayer").click(function(e){
-            $("div#moreAnimals").hide();
+        $("a.animalPlayer").click(function(e){            
             $("li").removeClass("p1selectTmp p2selectTmp");
             
             if(p1select==="" || (p1select!="" && p2select!="")){
@@ -52,20 +51,23 @@ function animalsInit(){
                 }
                 p1select=$(this).data("animal");
                 $(this).parent("li").addClass("p1select");
-                $.ajax({
+                /* DESACTIVER en attendant mieux. Les nouvelles videos se chargent uniquement à la selection du 2e player
+                 *$.ajax({
                     url: "http://junglebattle.com/api/videos/"+p1select+"/"+nvideos
                 }).done(function(data){
                     tabVideos=data;
                     loadVideoByNumber(0);
-                });
+                });*/
             }else if(p1select!="" && p2select==""){
+                $("div#moreAnimals").hide();
                 p2select=$(this).data("animal");
                 $(this).parent("li").addClass("p2select");
+                showLoadingScreen();
                 $.ajax({
                     url: "http://junglebattle.com/api/videos/"+p2select+"/"+p1select+"/"+nvideos
                 }).done(function(data){
                     tabVideos=data;
-                    loadVideoByNumber(0);
+                    window.location.href=window.location.pathname+"#!/video/"+tabVideos[0].video_id+"/"+tabVideos[0].animal1+"/"+tabVideos[0].animal2;
                 });
             }
             e.preventDefault();
@@ -110,9 +112,7 @@ function onYouTubeIframeAPIReady() {
 // The API will call this function when the video player is ready.
 function onPlayerReady(event) {
     loadVideoByNumber(0);
-    var newWidth = $("div#containerPlayer").width();
-    var newHeight = newWidth * 0.5625;
-    player.setSize(newWidth, newHeight);   
+    resizePlayer();
 }
 
 // Called to display the title at the end of the video
@@ -124,15 +124,16 @@ function onPlayerStateChange(event) {
 }
 
 
-function init(){    
-    animalsInit();
-    
+function init(){  
     // This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    
+
+    //load the animal selection bar
+    animalsInit();    
+
     initDone=true;
 }
 
@@ -145,8 +146,7 @@ $(document).ready(function(){
     });
  
     //PATH
-    Path.map("#!/home").to(init);
-    
+    Path.map("#!/home").to(init);    
     Path.map("#!/video/:id/:p1/:p2").to(function(){
         urlp1=this.params['p1'];
         urlp2=this.params['p2'];
@@ -155,14 +155,11 @@ $(document).ready(function(){
             init();
         else
             loadVideoFromUrl(this.params['p1'],this.params['p2'],this.params['id']);        
-    });
-    
+    });    
     Path.root("#!/home");
     Path.listen();
 });
 
 $(window).resize(function(){
-    var newWidth = $("div#containerPlayer").width();
-    var newHeight = newWidth * 0.5625;
-    player.setSize(newWidth, newHeight);
+    resizePlayer();
 });

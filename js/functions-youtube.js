@@ -4,7 +4,7 @@
 
 function loadPlayer(){
     player = new YT.Player('player', {
-        height: '390',
+        height: '330',
         width: '640',
         videoId: '',
         playerVars: {
@@ -22,7 +22,15 @@ function loadPlayer(){
     });
 }
 
-function loadVideo(p1,p2,video_id){  
+function resizePlayer(){
+    var newWidth = $("div#containerPlayer").width();
+    //var newHeight = newWidth * 0.5625;
+    var newHeight = 330;
+    player.setSize(newWidth, newHeight);       
+}
+
+function loadVideo(p1,p2,video_id){
+    voted = false;
     if(isPlaying)
         player.stopVideo();
     
@@ -58,16 +66,19 @@ function stopVideo() {
     player.stopVideo();
 }
 
-function showTitleScreen(p1,p2){
+function showTitleScreen(p1,p2){    
+    //clear end si besoin
+    clearEndScreen();
+    clearLoadingScreen();
     //Maj surimp
     $("div#titlePlayer span").html(p1.toUpperCase()+" V.S. "+p2.toUpperCase());
     $("div#titlePlayer").show();
     //Maj logos
     $("ul#animalsPlayer").html(
-        "<li><a data-hover='"+getlogo(p1)+"' onclick='vote(1)' href='#'><img src='img/"+getlogo(p1)+"' /></a>"+
+        "<li><a data-hover='"+getlogo(p1)+"' href='javascript:vote(1)'><img src='img/"+getlogo(p1)+"' /></a>"+
         "<span id='scoreP1'>"+p1.toUpperCase()+"</span></li>"+
-        "<li><a data-hover='"+getlogo(p2)+"' onclick='vote(2)' href='#'><img src='img/"+getlogo(p2)+"' /></a>"+
-        "<span id='scoreP2'>"+p2.toUpperCase()+"</span></li>"
+        "<li>VS<span id='scoreP2'>"+p2.toUpperCase()+"</span><a data-hover='"+getlogo(p2)+"' href='javascript:vote(2)'><img src='img/"+getlogo(p2)+"' /></a>"+
+        "</li>"
         );
         
     $("ul#animalsPlayer li a img").hover(function(){
@@ -95,6 +106,12 @@ function clearTitleScreen(){
 function clearEndScreen(){
     $("div#endPlayer").hide();
 }
+function clearLoadingScreen(){
+    $("div#loadingPlayer").hide();
+}
+function showLoadingScreen(){
+    $("div#loadingPlayer").show();
+}
 
 function vote(id){
     if(! voted){
@@ -107,16 +124,15 @@ function vote(id){
             //traitement graphique
             //winner
             if(data[0].num_votes > data[1].num_votes)
-                $("ul#animalsPlayer li:first").addClass("winner");
+                $("ul#animalsPlayer li a:first").addClass("winner");
             else
-                $("ul#animalsPlayer li:nth-child(2)").addClass("winner");
+                $("ul#animalsPlayer li a:nth-child(2)").addClass("winner");
             //player select
             if(id == 1)
-                $("ul#animalsPlayer li:first").addClass("select");
+                $("ul#animalsPlayer li a:first").addClass("select");
             else
-                $("ul#animalsPlayer li:nth-child(2)").addClass("select"); 
+                $("ul#animalsPlayer li a:nth-child(2)").addClass("select"); 
             //maj score
-            console.log(data);
             $("span#scoreP1").append(": "+data[0].num_votes+" votes");
             $("span#scoreP2").append(": "+data[1].num_votes+" votes");
         });

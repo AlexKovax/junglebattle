@@ -34,9 +34,9 @@ function animalsInit(){
         var i = 0;
         for(i in tabAnimals){
             if(i > 6)
-                $("div#moreAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
+                $("div#moreAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img alt='"+tabAnimals[i].name+"' src='img/"+tabAnimals[i].image+"'/></a></li>")
             else
-                $("div#containerAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img src='img/"+tabAnimals[i].image+"'/></a></li>")
+                $("div#containerAnimals ul").append("<li class='rank"+i+"'><a class='animalPlayer' data-animal='"+tabAnimals[i].name+"' href='#'><img alt='"+tabAnimals[i].name+"' src='img/"+tabAnimals[i].image+"'/></a></li>")
         }
 
         //CLICK player selection handling

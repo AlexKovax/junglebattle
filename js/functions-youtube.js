@@ -42,6 +42,7 @@ function loadVideo(p1,p2,video_id){
     var c=tabVideos[currentVideo+1];
     $("div.nextVideo a").attr("href","#!/video/"+c.video_id+"/"+c.animal1+"/"+c.animal2);
     
+    updateShareLinks(video_id,p1,p2);
 }
 
 function loadVideoByNumber(newCurrent){
@@ -75,9 +76,9 @@ function showTitleScreen(p1,p2){
     $("div#titlePlayer").show();
     //Maj logos
     $("ul#animalsPlayer").html(
-        "<li><a data-hover='"+getlogo(p1)+"' href='javascript:vote(1)'><img src='img/"+getlogo(p1)+"' /></a>"+
+        "<li><a data-hover='"+getlogo(p1)+"' href='javascript:vote(1)'><img alt='' src='img/"+getlogo(p1)+"' /></a>"+
         "<span id='scoreP1'>"+p1.toUpperCase()+"</span></li>"+
-        "<li>VS<span id='scoreP2'>"+p2.toUpperCase()+"</span><a data-hover='"+getlogo(p2)+"' href='javascript:vote(2)'><img src='img/"+getlogo(p2)+"' /></a>"+
+        "<li>VS<span id='scoreP2'>"+p2.toUpperCase()+"</span><a data-hover='"+getlogo(p2)+"' href='javascript:vote(2)'><img alt='' src='img/"+getlogo(p2)+"' /></a>"+
         "</li>"
         );
         
@@ -148,4 +149,17 @@ function toggleAnimals(){
             $("div#moreAnimals").hide();
         }
     });     
+}
+
+function updateShareLinks(id,p1,p2){
+    var url=encodeURIComponent('http://www.junglebattle.com/#!/video/'+id+'/'+p1+'/'+p2+'/');
+    var text=encodeURIComponent("Look it's a "+p1+" and a "+p2+" fighting!");
+    var twitterUrl='https://twitter.com/intent/tweet?text='+text+'&url='+url;
+    $("#twitterShare").attr("href",twitterUrl);
+    
+    var fbUrl='http://www.facebook.com/sharer.php?u='+url+'&t='+text;
+    $("#fbShare").attr("href",fbUrl);
+    
+    var tumblrUrl='http://tumblr.com/share?s=&v=3&t='+text+'&u='+url;
+    $("#tumblrShare").attr("href",tumblrUrl);
 }

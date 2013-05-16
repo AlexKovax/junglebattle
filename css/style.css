@@ -80,21 +80,21 @@ body section div#endPlayer{
 }
 
 
-body section div#titlePlayer div#arrow1{
+body section div#titlePlayer div.arrow1{
     margin-top: 60px;
     margin-left: 20px;
     background: url("../img/FLECHEGAUCHE.png") no-repeat 0 0;
     height: 52px;
 }
 
-body section div#endPlayer div#arrow1{
+body section div#endPlayer div.arrow1{
     margin-top: 30px;
     margin-left: 20px;
     background: url("../img/FLECHEGAUCHE.png") no-repeat 0 0;
     height: 52px;
 }
 
-body section div#endPlayer div#arrow2{
+body section div#endPlayer div.arrow2{
     margin-top: 20px;
     margin-right: 20px;
     background: url("../img/FLECHEDROITE.png") no-repeat right 0;
